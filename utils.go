@@ -76,7 +76,7 @@ func formatStruct(data interface{}) (string, error) {
 
 func callbackResponse(t *Telegram, c *tb.Callback, err error, payload interface{}, response string) {
 	if err != nil {
-		err := t.bot.Respond(c, &tb.CallbackResponse{Text: err.Error(), ShowAlert: false})
+		err = t.bot.Respond(c, &tb.CallbackResponse{Text: err.Error(), ShowAlert: false})
 		if err != nil {
 			log.Fatal().Str("module", "utils").Err(err).Msg("error replying to message")
 		}
