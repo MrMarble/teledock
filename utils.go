@@ -12,8 +12,6 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-type row []tb.Btn
-
 // parseInt64 parses a string and converts it to int64
 func parseInt64(s string) (int64, error) {
 	i, err := strconv.ParseInt(s, 10, 32)
