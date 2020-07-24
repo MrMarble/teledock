@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	defaultTZ   string    = "UTC"
 	bot         *Telegram = nil
 	superAdmins []int64   = []int64{}
 	docker      *Docker   = nil
@@ -64,7 +63,7 @@ func main() {
 	docker.ping()
 
 	// Create bot
-	bot, err := NewBot(os.Getenv("TELEDOCK_TOKEN"))
+	bot, err = NewBot(os.Getenv("TELEDOCK_TOKEN"))
 
 	if err != nil {
 		log.Fatal().Str("module", "main").Err(err).Msg("failed bot instantiaion")

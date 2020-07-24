@@ -123,11 +123,11 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 	case "stop":
 		err := docker.stop(payload)
 		callbackResponse(t, c, err, payload, fmt.Sprintf("Container %v stopped", payload))
-		break
+
 	case "start":
 		err := docker.start(payload)
 		callbackResponse(t, c, err, payload, fmt.Sprintf("Container %v started", payload))
-		break
+
 	case "inspect":
 		container, err := docker.inspect(payload)
 		if err != nil {
@@ -147,6 +147,6 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 				time.Sleep(250 * time.Millisecond)
 			}
 		}
-		break
+
 	}
 }
