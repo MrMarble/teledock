@@ -26,9 +26,9 @@ go build
 
 ### Requirements
 
-- [Docker](https://docker.com) (Obiously)
+- [Docker](https://docker.com) (Obviously)
 
-### Configuration environmet variables
+### Configuration environment variables
 
 - `TELEDOCK_TOKEN`: Telegram token. See https://core.telegram.org/bots
 - `TELEDOCK_SUPERADMINS`: Comma separated list of Telegram user ids, only users listed here will have access to the bot.
@@ -53,7 +53,7 @@ mrmarble/teledock
 
 ## Suggestions / Contribution
 
-I made teledock because I need it but if you want to use it and there's something missing or not quite right, feel free to create a issue or a pull request if you know how to fix it yourself
+I made teledock because I need it but if you want to use it and there's something missing or not quite right, feel free to create an issue or a pull request if you know how to fix it yourself
 
 
 ## License
