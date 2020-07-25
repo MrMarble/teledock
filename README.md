@@ -13,10 +13,8 @@
 - [x] Start / Stop containers
 - [x] Inspect containers
 - [x] List stacks
-- [ ] See logs
-- [ ] Create container
-- [ ] List images
-- [ ] Run command inside container
+- [x] See logs
+
 
 ## Build
 
@@ -40,8 +38,18 @@ go build
 To simplify the management of the bot there is a [Docker image](https://hub.docker.com/r/mrmarble/teledock) ready to use. You'll only need to mount the docker socket as a volume and set the environment variables ([see how](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)). Example:
 ```bash
 docker pull mrmarble/teledock # Only needed the first time or to update
-docker run -v /var/run/docker.sock:/var/run/docker.sock --name teledock --env-file=config.env mrmarble/teledock
+docker run -d -v /var/run/docker.sock:/var/run/docker.sock \
+--name teledock \
+--env TELEDOCK_TOKEN=bot_token \
+--env TELEDOCK_SUPERADMINS=tg_userid  \
+mrmarble/teledock 
 ```
+## TODO
+
+- [ ] Create container
+- [ ] List images
+- [ ] Run command inside container
+- [ ] Warn the user if tries to stop the bot
 
 ## Suggestions / Contribution
 
