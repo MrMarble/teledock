@@ -176,7 +176,7 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 				callbackResponse(t, c, err, payload, "")
 				return
 			}
-			for index, chunk := range chunkString(response, 300) {
+			for index, chunk := range chunkString(response, 3000) {
 				if index == 0 {
 					callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", chunk))
 				} else {
