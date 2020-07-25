@@ -102,7 +102,7 @@ func (t *Telegram) handleInspect(m *tb.Message) {
 			if err != nil {
 				t.reply(m, err.Error())
 			}
-			for index, chunk := range chunkString(response, 399) {
+			for index, chunk := range chunkString(response, 3000) {
 				if index == 0 {
 					t.reply(m, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
 				} else {
