@@ -85,7 +85,12 @@ func (d *Docker) logs(containerID string, tail string) ([]string, error) {
 		log.Fatal().Str("module", "docker").Str("containerID", containerID).Err(err).Msg("error getting container logs")
 		return nil, err
 	}
-	defer logsReader.Close()
+	defer func() {
+		err := logsReader.Close()
+		if err != nil {
+			log.Fatal().Str("module", "docker").Str("containerID", containerID).Err(err).Msg("error closing io.Reader")
+		}
+	}()
 
 	for {
 		numBytes, err := logsReader.Read(bytes)
