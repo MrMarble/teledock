@@ -1,5 +1,5 @@
 # Teledock
-<img src="assets/teledcock.png" width="180">
+<img src="https://github.com/MrMarble/teledock/raw/master/assets/teledcock.png" width="180">
 
 ![Lint](https://github.com/MrMarble/teledock/workflows/Lint/badge.svg?branch=master&event=push)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mrmarble/teledock)
