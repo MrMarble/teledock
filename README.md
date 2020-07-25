@@ -12,6 +12,7 @@
 - [x] List containers
 - [x] Start / Stop containers
 - [x] Inspect containers
+- [x] List stacks
 - [ ] See logs
 - [ ] Create container
 - [ ] List images

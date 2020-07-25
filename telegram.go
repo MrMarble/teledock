@@ -95,6 +95,12 @@ func (t *Telegram) registerHandlers() {
 			Aliases:     []string{"describe"},
 			Description: "Start a stopped container",
 		},
+		{
+			Handler:     t.handleStacks,
+			Cmd:         "stacks",
+			Aliases:     []string{"lss", "liststacks"},
+			Description: "Lists all compose stacks",
+		},
 	}
 	for _, command := range botCommands {
 		botCommandList = append(botCommandList, tb.Command{

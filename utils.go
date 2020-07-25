@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/rs/zerolog/log"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
@@ -30,11 +31,43 @@ func parseList(options types.ContainerListOptions) []string {
 	}
 	resultMsg := make([]string, len(containers))
 	for _, container := range containers {
-		resultMsg = append(resultMsg, strings.Join([]string{
+		message := []string{
 			fmt.Sprintf("%v  <b>%v</b>", state[container.State], container.Names[0][1:]),
 			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "ID:", container.ID[:12]),
 			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "STATUS:", container.Status),
 			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "IMAGE:", container.Image),
+		}
+		if stack, ok := container.Labels["com.docker.compose.project"]; ok {
+			message = append(message, fmt.Sprintf("<code> %-8v</code><code>%v</code>", "STACK:", stack))
+		}
+		resultMsg = append(resultMsg, strings.Join(message, "\n"))
+	}
+	return resultMsg
+}
+
+func getStacks() map[string][]types.Container {
+	var (
+		filters = filters.NewArgs()
+		stacks  = map[string][]types.Container{}
+	)
+	filters.Add("label", "com.docker.compose.project")
+	containers := docker.list(types.ContainerListOptions{All: true, Filters: filters})
+	for _, container := range containers {
+		stacks[container.Labels["com.docker.compose.project"]] = append(stacks[container.Labels["com.docker.compose.project"]], container)
+	}
+	return stacks
+}
+
+func parseStacks() []string {
+	stacks := getStacks()
+	if len(stacks) == 0 {
+		return []string{"No stacks running"}
+	}
+	resultMsg := make([]string, len(stacks))
+	for stackName, stack := range stacks {
+		resultMsg = append(resultMsg, strings.Join([]string{
+			fmt.Sprintf("<b>%v</b>", stackName),
+			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "SERVICES:", len(stack)),
 		}, "\n"))
 	}
 	return resultMsg

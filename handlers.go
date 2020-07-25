@@ -114,6 +114,14 @@ func (t *Telegram) handleInspect(m *tb.Message) {
 	}
 }
 
+func (t *Telegram) handleStacks(m *tb.Message) {
+	if !t.isSuperAdmin(m.Sender) {
+		return
+	}
+	resultMsg := parseStacks()
+	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
+}
+
 func (t *Telegram) handleCallback(c *tb.Callback) {
 	parts := strings.Split(c.Data, ":")
 	instruction := parts[0]
