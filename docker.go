@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"regexp"
 	"time"
 
@@ -68,6 +69,32 @@ func (d *Docker) inspect(containerID string) (*types.ContainerJSON, error) {
 		return nil, err
 	}
 	return &container, nil
+}
+
+func (d *Docker) logs(containerID string, tail string) ([]string, error) {
+	var (
+		bytes []byte   = make([]byte, 3000) // Telegram message length limit
+		logs  []string = nil
+		err   error    = nil
+	)
+	if tail != "all" && !isNumber(tail) {
+		tail = "10"
+	}
+	logsReader, err := d.cli.ContainerLogs(d.ctx, containerID, types.ContainerLogsOptions{Tail: tail, ShowStderr: true, ShowStdout: true})
+	defer logsReader.Close()
+
+	if err != nil {
+		log.Fatal().Str("module", "docker").Str("containerID", containerID).Err(err).Msg("error getting container logs")
+		return nil, err
+	}
+	for {
+		numBytes, err := logsReader.Read(bytes)
+		logs = append(logs, string(bytes[:numBytes]))
+		if err == io.EOF {
+			break
+		}
+	}
+	return logs, nil
 }
 
 func (d *Docker) isValidID(containerID string) bool {

@@ -82,24 +82,29 @@ func (t *Telegram) registerHandlers() {
 			Handler:     t.handleStop,
 			Cmd:         "stop",
 			Aliases:     []string{"down"},
-			Description: "Stop a running container",
+			Description: "Stop a running container. <ContainerID>",
 		},
 		{
 			Handler:     t.handleStartContainer,
 			Cmd:         "run",
-			Description: "Start a stopped container",
+			Description: "Start a stopped container. <ContainerID>",
 		},
 		{
 			Handler:     t.handleInspect,
 			Cmd:         "inspect",
 			Aliases:     []string{"describe"},
-			Description: "Start a stopped container",
+			Description: "Inspect a container. <ContainerID>",
 		},
 		{
 			Handler:     t.handleStacks,
 			Cmd:         "stacks",
 			Aliases:     []string{"lss", "liststacks"},
 			Description: "Lists all compose stacks",
+		},
+		{
+			Handler:     t.handleLogs,
+			Cmd:         "logs",
+			Description: "Shows container logs. <ContainerID> <tail>",
 		},
 	}
 	for _, command := range botCommands {

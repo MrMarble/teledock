@@ -122,6 +122,36 @@ func (t *Telegram) handleStacks(m *tb.Message) {
 	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
 }
 
+func (t *Telegram) handleLogs(m *tb.Message) {
+	if !t.isSuperAdmin(m.Sender) {
+		return
+	}
+	payload := strings.Split(m.Payload, " ")
+	containerID := payload[0]
+	if containerID == "" || !docker.isValidID(containerID) {
+		t.reply(m, "Choose a container", makeContainerMenu(t, types.ContainerListOptions{All: true}, "logs"))
+	} else {
+		var tail string = "10"
+		if len(payload) > 1 {
+			tail = payload[1]
+		}
+		logs, err := docker.logs(containerID, tail)
+
+		if err != nil {
+			t.reply(m, err.Error())
+			return
+		}
+		for index, chunk := range logs {
+			if index == 0 {
+				t.reply(m, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+			} else {
+				t.send(m.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+			}
+			time.Sleep(100 * time.Millisecond)
+		}
+	}
+}
+
 func (t *Telegram) handleCallback(c *tb.Callback) {
 	parts := strings.Split(c.Data, ":")
 	instruction := parts[0]
@@ -139,11 +169,11 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 	case "inspect":
 		container, err := docker.inspect(payload)
 		if err != nil {
-			callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", payload))
+			callbackResponse(t, c, err, payload, "")
 		} else {
 			response, err := formatStruct(container)
 			if err != nil {
-				callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", response))
+				callbackResponse(t, c, err, payload, "")
 				return
 			}
 			for index, chunk := range chunkString(response, 300) {
@@ -155,6 +185,20 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 				time.Sleep(250 * time.Millisecond)
 			}
 		}
-
+	case "logs":
+		logs, err := docker.logs(payload, "10")
+		if err != nil {
+			callbackResponse(t, c, err, payload, "")
+			return
+		}
+		for index, chunk := range logs {
+			if index == 0 {
+				callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", chunk))
+			}
+			if index != 0 && chunk != "" {
+				t.send(c.Message.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+			}
+			time.Sleep(100 * time.Millisecond)
+		}
 	}
 }

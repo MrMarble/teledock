@@ -24,6 +24,11 @@ func parseInt64(s string) (int64, error) {
 	return int64(i), nil
 }
 
+func isNumber(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
+}
+
 func parseList(options types.ContainerListOptions) []string {
 	containers := docker.list(options)
 	if len(containers) == 0 {
