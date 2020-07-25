@@ -81,12 +81,12 @@ func (d *Docker) logs(containerID string, tail string) ([]string, error) {
 		tail = "10"
 	}
 	logsReader, err := d.cli.ContainerLogs(d.ctx, containerID, types.ContainerLogsOptions{Tail: tail, ShowStderr: true, ShowStdout: true})
-	defer logsReader.Close()
-
 	if err != nil {
 		log.Fatal().Str("module", "docker").Str("containerID", containerID).Err(err).Msg("error getting container logs")
 		return nil, err
 	}
+	defer logsReader.Close()
+
 	for {
 		numBytes, err := logsReader.Read(bytes)
 		logs = append(logs, string(bytes[:numBytes]))
