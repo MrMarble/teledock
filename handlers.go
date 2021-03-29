@@ -93,25 +93,27 @@ func (t *Telegram) handleInspect(m *tb.Message) {
 	containerID := m.Payload
 	if containerID == "" || !docker.isValidID(containerID) {
 		t.askForContainer(m, types.ContainerListOptions{All: true}, "inspect")
-	} else {
-		container, err := docker.inspect(containerID)
-		if err != nil {
-			t.reply(m, err.Error())
-		} else {
-			response, err := formatStruct(container)
-			if err != nil {
-				t.reply(m, err.Error())
-			}
-			for index, chunk := range chunkString(response, 3000) {
-				if index == 0 {
-					t.reply(m, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
-				} else {
-					t.send(m.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
-				}
-				time.Sleep(100 * time.Millisecond)
-			}
-		}
+		return
 	}
+	container, err := docker.inspect(containerID)
+	if err != nil {
+		t.reply(m, err.Error())
+		return
+	}
+
+	response, err := formatStruct(container)
+	if err != nil {
+		t.reply(m, err.Error())
+	}
+	for index, chunk := range chunkString(response, 3000) {
+		if index == 0 {
+			t.reply(m, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+		} else {
+			t.send(m.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+
 }
 
 func (t *Telegram) handleStacks(m *tb.Message) {
