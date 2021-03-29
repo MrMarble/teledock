@@ -13,6 +13,8 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
+const COMPOSE_LABEL = "com.docker.compose.project"
+
 // parseInt64 parses a string and converts it to int64
 func parseInt64(s string) (int64, error) {
 	i, err := strconv.ParseInt(s, 10, 32)
@@ -42,7 +44,7 @@ func parseList(options types.ContainerListOptions) []string {
 			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "STATUS:", container.Status),
 			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "IMAGE:", container.Image),
 		}
-		if stack, ok := container.Labels["com.docker.compose.project"]; ok {
+		if stack, ok := container.Labels[COMPOSE_LABEL]; ok {
 			message = append(message, fmt.Sprintf("<code> %-8v</code><code>%v</code>", "STACK:", stack))
 		}
 		resultMsg = append(resultMsg, strings.Join(message, "\n"))
@@ -55,10 +57,10 @@ func getStacks() map[string][]types.Container {
 		filters = filters.NewArgs()
 		stacks  = map[string][]types.Container{}
 	)
-	filters.Add("label", "com.docker.compose.project")
+	filters.Add("label", COMPOSE_LABEL)
 	containers := docker.list(types.ContainerListOptions{All: true, Filters: filters})
 	for _, container := range containers {
-		stacks[container.Labels["com.docker.compose.project"]] = append(stacks[container.Labels["com.docker.compose.project"]], container)
+		stacks[container.Labels[COMPOSE_LABEL]] = append(stacks[container.Labels[COMPOSE_LABEL]], container)
 	}
 	return stacks
 }
