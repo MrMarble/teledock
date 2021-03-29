@@ -14,6 +14,7 @@ import (
 )
 
 const COMPOSE_LABEL = "com.docker.compose.project"
+const FORMATED_STR_PADDED = "<code> %-8v</code><code>%v</code>"
 
 // parseInt64 parses a string and converts it to int64
 func parseInt64(s string) (int64, error) {
@@ -40,12 +41,12 @@ func parseList(options types.ContainerListOptions) []string {
 	for _, container := range containers {
 		message := []string{
 			fmt.Sprintf("%v  <b>%v</b>", state[container.State], container.Names[0][1:]),
-			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "ID:", container.ID[:12]),
-			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "STATUS:", container.Status),
-			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "IMAGE:", container.Image),
+			fmt.Sprintf(FORMATED_STR_PADDED, "ID:", container.ID[:12]),
+			fmt.Sprintf(FORMATED_STR_PADDED, "STATUS:", container.Status),
+			fmt.Sprintf(FORMATED_STR_PADDED, "IMAGE:", container.Image),
 		}
 		if stack, ok := container.Labels[COMPOSE_LABEL]; ok {
-			message = append(message, fmt.Sprintf("<code> %-8v</code><code>%v</code>", "STACK:", stack))
+			message = append(message, fmt.Sprintf(FORMATED_STR_PADDED, "STACK:", stack))
 		}
 		resultMsg = append(resultMsg, strings.Join(message, "\n"))
 	}
@@ -74,7 +75,7 @@ func parseStacks() []string {
 	for stackName, stack := range stacks {
 		resultMsg = append(resultMsg, strings.Join([]string{
 			fmt.Sprintf("<b>%v</b>", stackName),
-			fmt.Sprintf("<code> %-8v</code><code>%v</code>", "SERVICES:", len(stack)),
+			fmt.Sprintf(FORMATED_STR_PADDED, "SERVICES:", len(stack)),
 		}, "\n"))
 	}
 	return resultMsg
