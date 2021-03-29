@@ -6,6 +6,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
@@ -155,4 +156,43 @@ func chunkString(s string, chunkSize int) []string {
 
 func (t *Telegram) askForContainer(m *tb.Message, listOps types.ContainerListOptions, cb string) {
 	t.reply(m, "Choose a container", makeContainerMenu(t, listOps, cb))
+}
+
+func handleInspect(t *Telegram, c *tb.Callback, payload string) {
+	container, err := docker.inspect(payload)
+	if err != nil {
+		callbackResponse(t, c, err, payload, "")
+		return
+	}
+
+	response, err := formatStruct(container)
+	if err != nil {
+		callbackResponse(t, c, err, payload, "")
+		return
+	}
+	for index, chunk := range chunkString(response, 3000) {
+		if index == 0 {
+			callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
+		} else {
+			t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+		}
+		time.Sleep(250 * time.Millisecond)
+	}
+}
+
+func handleLog(t *Telegram, c *tb.Callback, payload string) {
+	logs, err := docker.logs(payload, "10")
+	if err != nil {
+		callbackResponse(t, c, err, payload, "")
+		return
+	}
+	for index, chunk := range logs {
+		if index == 0 {
+			callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
+		}
+		if index != 0 && chunk != "" {
+			t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
 }

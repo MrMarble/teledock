@@ -171,40 +171,9 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 		callbackResponse(t, c, err, payload, fmt.Sprintf("Container %v started", payload))
 
 	case "inspect":
-		container, err := docker.inspect(payload)
-		if err != nil {
-			callbackResponse(t, c, err, payload, "")
-			return
-		}
-
-		response, err := formatStruct(container)
-		if err != nil {
-			callbackResponse(t, c, err, payload, "")
-			return
-		}
-		for index, chunk := range chunkString(response, 3000) {
-			if index == 0 {
-				callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
-			} else {
-				t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
-			}
-			time.Sleep(250 * time.Millisecond)
-		}
+		handleInspect(t, c, payload)
 
 	case "logs":
-		logs, err := docker.logs(payload, "10")
-		if err != nil {
-			callbackResponse(t, c, err, payload, "")
-			return
-		}
-		for index, chunk := range logs {
-			if index == 0 {
-				callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
-			}
-			if index != 0 && chunk != "" {
-				t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
-			}
-			time.Sleep(100 * time.Millisecond)
-		}
+		handleLog(t, c, payload)
 	}
 }
