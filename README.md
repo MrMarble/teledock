@@ -1,7 +1,7 @@
 # Teledock
 <img src="https://github.com/MrMarble/teledock/raw/master/assets/teledcock.png" width="180">
 
-![Lint](https://github.com/MrMarble/teledock/workflows/Lint/badge.svg?branch=master&event=push)
+[![Lint](https://github.com/MrMarble/teledock/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/MrMarble/teledock/actions/workflows/lint.yml)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mrmarble/teledock)
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/mrmarble/teledock?sort=semver)
 [![Go Report Card](https://goreportcard.com/badge/github.com/MrMarble/teledock)](https://goreportcard.com/report/github.com/MrMarble/teledock)
