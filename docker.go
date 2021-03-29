@@ -75,7 +75,6 @@ func (d *Docker) logs(containerID string, tail string) ([]string, error) {
 	var (
 		bytes []byte   = make([]byte, 3000) // Telegram message length limit
 		logs  []string = nil
-		err   error    = nil
 	)
 	if tail != "all" && !isNumber(tail) {
 		tail = "10"
