@@ -56,7 +56,7 @@ func (t *Telegram) handleStop(m *tb.Message) {
 
 	containerID := m.Payload
 	if containerID == "" || !docker.isValidID(containerID) {
-		t.reply(m, "Choose a container", makeContainerMenu(t, types.ContainerListOptions{}, "stop"))
+		t.askForContainer(m, types.ContainerListOptions{}, "stop")
 	} else {
 		if err := docker.stop(containerID); err != nil {
 			t.reply(m, err.Error())
@@ -75,7 +75,7 @@ func (t *Telegram) handleStartContainer(m *tb.Message) {
 	if containerID == "" || !docker.isValidID(containerID) {
 		filters := filters.NewArgs()
 		filters.Add("status", "exited")
-		t.reply(m, "Choose a container", makeContainerMenu(t, types.ContainerListOptions{All: true, Filters: filters}, "start"))
+		t.askForContainer(m, types.ContainerListOptions{All: true, Filters: filters}, "start")
 	} else {
 		if err := docker.start(containerID); err != nil {
 			t.reply(m, err.Error())
@@ -92,7 +92,7 @@ func (t *Telegram) handleInspect(m *tb.Message) {
 
 	containerID := m.Payload
 	if containerID == "" || !docker.isValidID(containerID) {
-		t.reply(m, "Choose a container", makeContainerMenu(t, types.ContainerListOptions{All: true}, "inspect"))
+		t.askForContainer(m, types.ContainerListOptions{All: true}, "inspect")
 	} else {
 		container, err := docker.inspect(containerID)
 		if err != nil {
@@ -129,7 +129,7 @@ func (t *Telegram) handleLogs(m *tb.Message) {
 	payload := strings.Split(m.Payload, " ")
 	containerID := payload[0]
 	if containerID == "" || !docker.isValidID(containerID) {
-		t.reply(m, "Choose a container", makeContainerMenu(t, types.ContainerListOptions{All: true}, "logs"))
+		t.askForContainer(m, types.ContainerListOptions{All: true}, "logs")
 	} else {
 		var tail string = "10"
 		if len(payload) > 1 {

@@ -149,3 +149,7 @@ func chunkString(s string, chunkSize int) []string {
 	}
 	return chunks
 }
+
+func (t *Telegram) askForContainer(m *tb.Message, listOps types.ContainerListOptions, cb string) {
+	t.reply(m, "Choose a container", makeContainerMenu(t, listOps, cb))
+}
