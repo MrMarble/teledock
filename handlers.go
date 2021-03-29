@@ -22,6 +22,8 @@ var state = map[string]emoji.Emoji{
 	"dead":       emoji.Skull,
 }
 
+const FORMATED_STR = "<code>%v</code>"
+
 // handleStart triggers when /start is sent on private
 func (t *Telegram) handleStart(m *tb.Message) {
 	if !m.Private() {
@@ -107,9 +109,9 @@ func (t *Telegram) handleInspect(m *tb.Message) {
 	}
 	for index, chunk := range chunkString(response, 3000) {
 		if index == 0 {
-			t.reply(m, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+			t.reply(m, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
 		} else {
-			t.send(m.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+			t.send(m.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
@@ -145,9 +147,9 @@ func (t *Telegram) handleLogs(m *tb.Message) {
 		}
 		for index, chunk := range logs {
 			if index == 0 {
-				t.reply(m, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+				t.reply(m, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
 			} else {
-				t.send(m.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+				t.send(m.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
@@ -182,9 +184,9 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 		}
 		for index, chunk := range chunkString(response, 3000) {
 			if index == 0 {
-				callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", chunk))
+				callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
 			} else {
-				t.send(c.Message.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+				t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
 			}
 			time.Sleep(250 * time.Millisecond)
 		}
@@ -197,10 +199,10 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 		}
 		for index, chunk := range logs {
 			if index == 0 {
-				callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", chunk))
+				callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
 			}
 			if index != 0 && chunk != "" {
-				t.send(c.Message.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+				t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
