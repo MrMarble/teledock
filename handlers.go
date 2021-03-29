@@ -51,6 +51,14 @@ func (t *Telegram) handleListAll(m *tb.Message) {
 	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
 }
 
+func (t *Telegram) handleImageList(m *tb.Message) {
+	if !t.isSuperAdmin(m.Sender) {
+		return
+	}
+	resultMsg := parseImageList(types.ImageListOptions{})
+	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
+}
+
 func (t *Telegram) handleStop(m *tb.Message) {
 	if !t.isSuperAdmin(m.Sender) {
 		return

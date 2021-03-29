@@ -45,6 +45,14 @@ func (d *Docker) list(options types.ContainerListOptions) []types.Container {
 	return containers
 }
 
+func (d *Docker) listImages(options types.ImageListOptions) []types.ImageSummary {
+	images, err := d.cli.ImageList(d.ctx, options)
+	if err != nil {
+		log.Fatal().Str("module", "docker").Err(err).Msg("error retrieving images")
+	}
+	return images
+}
+
 func (d *Docker) stop(containerID string) error {
 	timeout := time.Until(time.Now().Add(30 * time.Second))
 	if err := d.cli.ContainerStop(d.ctx, containerID, &timeout); err != nil {

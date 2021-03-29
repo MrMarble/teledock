@@ -54,6 +54,18 @@ func parseList(options types.ContainerListOptions) []string {
 	return resultMsg
 }
 
+func parseImageList(options types.ImageListOptions) []string {
+	images := docker.listImages(options)
+	if len(images) == 0 {
+		return []string{"No images found"}
+	}
+	resultMsg := make([]string, len(images))
+	for _, image := range images {
+		resultMsg = append(resultMsg, fmt.Sprintf("<b>ID:</b><code>%v</code>", image.ID[:12]))
+	}
+	return resultMsg
+}
+
 func getStacks() map[string][]types.Container {
 	var (
 		filters = filters.NewArgs()

@@ -106,6 +106,11 @@ func (t *Telegram) registerHandlers() {
 			Cmd:         "logs",
 			Description: "Shows container logs. <ContainerID> <tail>",
 		},
+		{
+			Handler:     t.handleImageList,
+			Cmd:         "images",
+			Description: "List all installed images",
+		},
 	}
 	for _, command := range botCommands {
 		botCommandList = append(botCommandList, tb.Command{
