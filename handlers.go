@@ -172,21 +172,23 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 		container, err := docker.inspect(payload)
 		if err != nil {
 			callbackResponse(t, c, err, payload, "")
-		} else {
-			response, err := formatStruct(container)
-			if err != nil {
-				callbackResponse(t, c, err, payload, "")
-				return
-			}
-			for index, chunk := range chunkString(response, 3000) {
-				if index == 0 {
-					callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", chunk))
-				} else {
-					t.send(c.Message.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
-				}
-				time.Sleep(250 * time.Millisecond)
-			}
+			return
 		}
+
+		response, err := formatStruct(container)
+		if err != nil {
+			callbackResponse(t, c, err, payload, "")
+			return
+		}
+		for index, chunk := range chunkString(response, 3000) {
+			if index == 0 {
+				callbackResponse(t, c, err, payload, fmt.Sprintf("<code>%v</code>", chunk))
+			} else {
+				t.send(c.Message.Chat, fmt.Sprintf("<code>%v</code>", chunk), tb.ModeHTML)
+			}
+			time.Sleep(250 * time.Millisecond)
+		}
+
 	case "logs":
 		logs, err := docker.logs(payload, "10")
 		if err != nil {
