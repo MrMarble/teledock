@@ -5,6 +5,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mrmarble/teledock)
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/mrmarble/teledock?sort=semver)
 [![Go Report Card](https://goreportcard.com/badge/github.com/MrMarble/teledock)](https://goreportcard.com/report/github.com/MrMarble/teledock)
+![Docker Pulls](https://img.shields.io/docker/pulls/mrmarble/teledock)
 
 **Teledock**: A simple telegram bot that allows a telegram's user to control a docker service.
 
