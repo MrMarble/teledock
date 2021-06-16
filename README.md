@@ -1,7 +1,8 @@
 # Teledock
+
 <img src="https://github.com/MrMarble/teledock/raw/master/assets/teledcock.png" width="180">
 
-[![Lint](https://github.com/MrMarble/teledock/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/MrMarble/teledock/actions/workflows/lint.yml)
+[![Golang](https://github.com/MrMarble/teledock/actions/workflows/golang.yml/badge.svg)](https://github.com/MrMarble/teledock/actions/workflows/golang.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MrMarble_teledock&metric=alert_status)](https://sonarcloud.io/dashboard?id=MrMarble_teledock)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mrmarble/teledock)
 [![Go Report Card](https://goreportcard.com/badge/github.com/MrMarble/teledock)](https://goreportcard.com/report/github.com/MrMarble/teledock)
@@ -17,7 +18,6 @@
 - [x] List stacks
 - [x] See logs
 - [x] List images
-
 
 ## Build
 
@@ -39,14 +39,16 @@ go build
 ## Docker
 
 To simplify the management of the bot there is a [Docker image](https://hub.docker.com/r/mrmarble/teledock) ready to use. You'll only need to mount the docker socket as a volume and set the environment variables ([see how](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)). Example:
+
 ```bash
 docker pull mrmarble/teledock # Only needed the first time or to update
 docker run -d -v /var/run/docker.sock:/var/run/docker.sock \
 --name teledock \
 --env TELEDOCK_TOKEN=bot_token \
 --env TELEDOCK_SUPERADMINS=tg_userid  \
-mrmarble/teledock 
+mrmarble/teledock
 ```
+
 ## TODO
 
 - [ ] Create container
@@ -56,7 +58,6 @@ mrmarble/teledock
 ## Suggestions / Contribution
 
 I made teledock because I need it but if you want to use it and there's something missing or not quite right, feel free to create an issue or a pull request if you know how to fix it yourself
-
 
 ## License
 
