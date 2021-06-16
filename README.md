@@ -15,7 +15,7 @@
 - [x] Inspect containers
 - [x] List stacks
 - [x] See logs
-- [ ] List images
+- [x] List images
 
 
 ## Build
