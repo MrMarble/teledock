@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"math"
 	"strconv"
 	"strings"
@@ -61,7 +62,7 @@ func parseImageList(options types.ImageListOptions) []string {
 	}
 	resultMsg := make([]string, len(images))
 	for _, image := range images {
-		resultMsg = append(resultMsg, fmt.Sprintf("<b>ID:</b><code>%v</code>", image.ID[:12]))
+		resultMsg = append(resultMsg, fmt.Sprintf("<b>Tag: </b><code>%v</code>\n<b>ID: </b><code>%v</code>", html.EscapeString(image.RepoTags[0]), image.ID[6:18]))
 	}
 	return resultMsg
 }
