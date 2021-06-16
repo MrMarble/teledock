@@ -15,6 +15,7 @@
 - [x] Inspect containers
 - [x] List stacks
 - [x] See logs
+- [ ] List images
 
 
 ## Build
@@ -48,7 +49,6 @@ mrmarble/teledock
 ## TODO
 
 - [ ] Create container
-- [ ] List images
 - [ ] Run command inside container
 - [ ] Warn the user if tries to stop the bot
 
