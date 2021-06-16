@@ -2,8 +2,8 @@
 <img src="https://github.com/MrMarble/teledock/raw/master/assets/teledcock.png" width="180">
 
 [![Lint](https://github.com/MrMarble/teledock/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/MrMarble/teledock/actions/workflows/lint.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MrMarble_teledock&metric=alert_status)](https://sonarcloud.io/dashboard?id=MrMarble_teledock)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/mrmarble/teledock)
-![Docker Image Version (latest semver)](https://img.shields.io/docker/v/mrmarble/teledock?sort=semver)
 [![Go Report Card](https://goreportcard.com/badge/github.com/MrMarble/teledock)](https://goreportcard.com/report/github.com/MrMarble/teledock)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mrmarble/teledock)
 
