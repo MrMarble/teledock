@@ -1,0 +1,59 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build binary
+    cmds:
+      - go build -v .
+  fmt:
+    desc: Run lint tools
+    deps:
+      - task: tools
+    vars:
+      SHADOW:
+        sh: which shadow
+    cmds:
+      - gofmt -s -l .
+      - go vet
+      - go vet -vettool {{.SHADOW}}
+      - golint ./...
+      - staticcheck ./...
+      - errcheck ./...
+      - gosec -quiet -fmt=golint ./...
+
+  install:
+    desc: Install dependencies
+    cmds:
+      - go get
+
+  setup:
+    desc: Install git commit hook
+    status:
+      - test -f .git/hooks/commit-msg
+      - test ! -w .git/hooks/commit-msg
+    cmds:
+      - curl --fail -o .git/hooks/commit-msg https://raw.githubusercontent.com/hazcod/semantic-commit-hook/master/commit-msg
+      - chmod 500 .git/hooks/commit-msg
+    generates:
+      - .git/hooks/commit-msg
+
+  tools:
+    desc: Install development tools
+    status:
+      - test -f $GOPATH/bin/errcheck
+      - test -f $GOPATH/bin/golint
+      - test -f $GOPATH/bin/gosec
+      - test -f $GOPATH/bin/shadow
+      - test -f $GOPATH/bin/staticcheck
+    cmds:
+      - go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
+      - go install golang.org/x/lint/golint
+      - go install honnef.co/go/tools/cmd/staticcheck
+      - go install github.com/kisielk/errcheck
+      - go install github.com/securego/gosec/cmd/gosec
+    generates:
+      - "$GOPATH/bin/errcheck"
+      - "$GOPATH/bin/gosec"
+      - "$GOPATH/bin/shadow"
+      - "$GOPATH/bin/staticcheck"
+      - "$GOPATH/bin/golint"
