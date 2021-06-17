@@ -32,7 +32,7 @@ tasks:
       - test -f .git/hooks/commit-msg
       - test ! -w .git/hooks/commit-msg
     cmds:
-      - curl --fail -o .git/hooks/commit-msg https://raw.githubusercontent.com/hazcod/semantic-commit-hook/master/commit-msg
+      - curl --fail -o .git/hooks/commit-msg https://gist.githubusercontent.com/MrMarble/509ae7fdec449b7fbe10fa11eb54bc16/raw/9789eb6e184dfddf64c34f3545b4d1e3bc275f36/commit-msg
       - chmod 500 .git/hooks/commit-msg
     generates:
       - .git/hooks/commit-msg
