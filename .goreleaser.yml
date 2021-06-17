@@ -4,7 +4,7 @@ before:
   hooks:
     # You may remove this if you don't use go modules.
     - go mod tidy
-builds:
+build:
   binary: teledock
   env:
     - CGO_ENABLED=0
