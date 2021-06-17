@@ -16,4 +16,5 @@ teledock
 # vendor/
 
 .vscode
-.env
+.envdist/
+dist
