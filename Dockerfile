@@ -6,7 +6,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o teledock .
 
-FROM alpine:latest
+FROM scratch
 WORKDIR /bot/
 COPY --from=builder /source/teledock .
 CMD ["./teledock"]
