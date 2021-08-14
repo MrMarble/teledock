@@ -11,5 +11,5 @@ require (
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/rs/zerolog v1.23.0
 	google.golang.org/grpc v1.38.0 // indirect
-	gopkg.in/tucnak/telebot.v2 v2.3.5
+	gopkg.in/tucnak/telebot.v2 v2.4.0
 )
