@@ -9,7 +9,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/enescakir/emoji v1.0.0
 	github.com/morikuni/aec v1.0.0 // indirect
-	github.com/rs/zerolog v1.23.0
+	github.com/rs/zerolog v1.25.0
 	google.golang.org/grpc v1.38.0 // indirect
 	gopkg.in/tucnak/telebot.v2 v2.4.0
 )
