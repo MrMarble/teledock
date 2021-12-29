@@ -9,13 +9,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Telegram represents the telegram bot
+// Telegram represents the telegram bot.
 type Telegram struct {
 	bot                *tb.Bot
 	handlersRegistered bool
 }
 
-// Command represent a telegram command
+// Command represent a telegram command.
 type Command struct {
 	Cmd         string
 	Aliases     []string
@@ -23,7 +23,7 @@ type Command struct {
 	Handler     interface{}
 }
 
-// NewBot returns a Telegram bot
+// NewBot returns a Telegram bot.
 func NewBot(token string) (*Telegram, error) {
 	bot, err := tb.NewBot(tb.Settings{
 		Token:  token,
@@ -42,7 +42,7 @@ func NewBot(token string) (*Telegram, error) {
 	return &Telegram{bot: bot}, nil
 }
 
-// Start starts polling for telegram updates
+// Start starts polling for telegram updates.
 func (t *Telegram) Start() {
 	t.registerHandlers()
 
@@ -50,7 +50,7 @@ func (t *Telegram) Start() {
 	t.bot.Start()
 }
 
-// RegisterHandlers registers all the handlers
+// RegisterHandlers registers all the handlers.
 func (t *Telegram) registerHandlers() {
 	if t.handlersRegistered {
 		return
@@ -142,7 +142,7 @@ func (t *Telegram) isSuperAdmin(user *tb.User) bool {
 	return false
 }
 
-// send sends a message with error logging and retries
+// send sends a message with error logging and retries.
 func (t *Telegram) send(to tb.Recipient, what interface{}, options ...interface{}) *tb.Message {
 	hasParseMode := false
 	for _, opt := range options {
@@ -175,7 +175,7 @@ func (t *Telegram) send(to tb.Recipient, what interface{}, options ...interface{
 	}
 }
 
-// reply replies a message with error logging and retries
+// reply replies a message with error logging and retries.
 func (t *Telegram) reply(to *tb.Message, what interface{}, options ...interface{}) *tb.Message {
 	hasParseMode := false
 	for _, opt := range options {

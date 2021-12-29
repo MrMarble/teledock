@@ -15,10 +15,10 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-const COMPOSE_LABEL = "com.docker.compose.project"
-const FORMATED_STR_PADDED = "<code> %-8v</code><code>%v</code>"
+const ComposeLabel = "com.docker.compose.project"
+const FormatedStrPadded = "<code> %-8v</code><code>%v</code>"
 
-// parseInt64 parses a string and converts it to int64
+// parseInt64 parses a string and converts it to int64.
 func parseInt64(s string) (int64, error) {
 	i, err := strconv.ParseInt(s, 10, 64)
 
@@ -43,12 +43,12 @@ func parseList(options types.ContainerListOptions) []string {
 	for _, container := range containers {
 		message := []string{
 			fmt.Sprintf("%v  <b>%v</b>", state[container.State], container.Names[0][1:]),
-			fmt.Sprintf(FORMATED_STR_PADDED, "ID:", container.ID[:12]),
-			fmt.Sprintf(FORMATED_STR_PADDED, "STATUS:", container.Status),
-			fmt.Sprintf(FORMATED_STR_PADDED, "IMAGE:", container.Image),
+			fmt.Sprintf(FormatedStrPadded, "ID:", container.ID[:12]),
+			fmt.Sprintf(FormatedStrPadded, "STATUS:", container.Status),
+			fmt.Sprintf(FormatedStrPadded, "IMAGE:", container.Image),
 		}
-		if stack, ok := container.Labels[COMPOSE_LABEL]; ok {
-			message = append(message, fmt.Sprintf(FORMATED_STR_PADDED, "STACK:", stack))
+		if stack, ok := container.Labels[ComposeLabel]; ok {
+			message = append(message, fmt.Sprintf(FormatedStrPadded, "STACK:", stack))
 		}
 		resultMsg = append(resultMsg, strings.Join(message, "\n"))
 	}
@@ -72,10 +72,10 @@ func getStacks() map[string][]types.Container {
 		filters = filters.NewArgs()
 		stacks  = map[string][]types.Container{}
 	)
-	filters.Add("label", COMPOSE_LABEL)
+	filters.Add("label", ComposeLabel)
 	containers := docker.list(types.ContainerListOptions{All: true, Filters: filters})
 	for _, container := range containers {
-		stacks[container.Labels[COMPOSE_LABEL]] = append(stacks[container.Labels[COMPOSE_LABEL]], container)
+		stacks[container.Labels[ComposeLabel]] = append(stacks[container.Labels[ComposeLabel]], container)
 	}
 	return stacks
 }
@@ -89,7 +89,7 @@ func parseStacks() []string {
 	for stackName, stack := range stacks {
 		resultMsg = append(resultMsg, strings.Join([]string{
 			fmt.Sprintf("<b>%v</b>", stackName),
-			fmt.Sprintf(FORMATED_STR_PADDED, "SERVICES:", len(stack)),
+			fmt.Sprintf(FormatedStrPadded, "SERVICES:", len(stack)),
 		}, "\n"))
 	}
 	return resultMsg
@@ -185,9 +185,9 @@ func handleInspect(t *Telegram, c *tb.Callback, payload string) {
 	}
 	for index, chunk := range chunkString(response, 3000) {
 		if index == 0 {
-			callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
+			callbackResponse(t, c, err, payload, fmt.Sprintf(FormatedStr, chunk))
 		} else {
-			t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+			t.send(c.Message.Chat, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
 		}
 		time.Sleep(250 * time.Millisecond)
 	}
@@ -201,10 +201,10 @@ func handleLog(t *Telegram, c *tb.Callback, payload string) {
 	}
 	for index, chunk := range logs {
 		if index == 0 {
-			callbackResponse(t, c, err, payload, fmt.Sprintf(FORMATED_STR, chunk))
+			callbackResponse(t, c, err, payload, fmt.Sprintf(FormatedStr, chunk))
 		}
 		if index != 0 && chunk != "" {
-			t.send(c.Message.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+			t.send(c.Message.Chat, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}

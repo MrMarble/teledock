@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	bot         *Telegram = nil
-	superAdmins []int64   = []int64{}
-	docker      *Docker   = nil
+	bot         *Telegram
+	superAdmins = []int64{}
+	docker      *Docker
 )
 
 func main() {

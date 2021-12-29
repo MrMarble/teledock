@@ -12,7 +12,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Docker represents a docker client
+// Docker represents a docker client.
 type Docker struct {
 	cli *client.Client
 	ctx context.Context
@@ -81,8 +81,8 @@ func (d *Docker) inspect(containerID string) (*types.ContainerJSON, error) {
 
 func (d *Docker) logs(containerID string, tail string) ([]string, error) {
 	var (
-		bytes []byte   = make([]byte, 3000) // Telegram message length limit
-		logs  []string = nil
+		bytes = make([]byte, 3000) // Telegram message length limit
+		logs  []string
 	)
 	if tail != "all" && !isNumber(tail) {
 		tail = "10"
