@@ -8,5 +8,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o teledock .
 
 FROM scratch
 WORKDIR /bot/
-COPY --from=builder /source/teledock .
+COPY --from=builder /source/teledock ./cmd/teledock/main.go
 CMD ["./teledock"]

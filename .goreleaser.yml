@@ -16,7 +16,7 @@ build:
   ignore:
     - goos: darwin
       goarch: 386
-
+  main: ./cmd/teledock/main.go
 archives:
   - replacements:
       linux: Linux
