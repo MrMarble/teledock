@@ -22,9 +22,9 @@ var state = map[string]emoji.Emoji{
 	"dead":       emoji.Skull,
 }
 
-const FORMATED_STR = "<code>%v</code>"
+const FormatedStr = "<code>%v</code>"
 
-// handleStart triggers when /start is sent on private
+// handleStart triggers when /start is sent on private.
 func (t *Telegram) handleStart(m *tb.Message) {
 	if !m.Private() {
 		return
@@ -33,7 +33,7 @@ func (t *Telegram) handleStart(m *tb.Message) {
 	t.send(m.Chat, "Telegram bot made by <a href='tg://user?id=256671105'>MrMarble</a>")
 }
 
-// handleList triggers when the ps command is sent
+// handleList triggers when the ps command is sent.
 func (t *Telegram) handleList(m *tb.Message) {
 	if !t.isSuperAdmin(m.Sender) {
 		return
@@ -42,7 +42,7 @@ func (t *Telegram) handleList(m *tb.Message) {
 	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
 }
 
-// handleList triggers when the psa command is sent
+// handleList triggers when the psa command is sent.
 func (t *Telegram) handleListAll(m *tb.Message) {
 	if !t.isSuperAdmin(m.Sender) {
 		return
@@ -117,9 +117,9 @@ func (t *Telegram) handleInspect(m *tb.Message) {
 	}
 	for index, chunk := range chunkString(response, 3000) {
 		if index == 0 {
-			t.reply(m, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+			t.reply(m, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
 		} else {
-			t.send(m.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+			t.send(m.Chat, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
@@ -143,7 +143,7 @@ func (t *Telegram) handleLogs(m *tb.Message) {
 	if containerID == "" || !docker.isValidID(containerID) {
 		t.askForContainer(m, types.ContainerListOptions{All: true}, "logs")
 	} else {
-		var tail string = "10"
+		tail := "10"
 		if len(payload) > 1 {
 			tail = payload[1]
 		}
@@ -155,9 +155,9 @@ func (t *Telegram) handleLogs(m *tb.Message) {
 		}
 		for index, chunk := range logs {
 			if index == 0 {
-				t.reply(m, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+				t.reply(m, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
 			} else {
-				t.send(m.Chat, fmt.Sprintf(FORMATED_STR, chunk), tb.ModeHTML)
+				t.send(m.Chat, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
