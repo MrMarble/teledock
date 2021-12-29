@@ -20,13 +20,13 @@ const FORMATED_STR_PADDED = "<code> %-8v</code><code>%v</code>"
 
 // parseInt64 parses a string and converts it to int64
 func parseInt64(s string) (int64, error) {
-	i, err := strconv.ParseInt(s, 10, 32)
+	i, err := strconv.ParseInt(s, 10, 64)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return int64(i), nil
+	return i, nil
 }
 
 func isNumber(s string) bool {
