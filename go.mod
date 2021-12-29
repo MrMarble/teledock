@@ -6,7 +6,7 @@ require (
 	github.com/docker/docker v20.10.8+incompatible
 	github.com/enescakir/emoji v1.0.0
 	github.com/rs/zerolog v1.25.0
-	gopkg.in/tucnak/telebot.v2 v2.4.0
+	gopkg.in/tucnak/telebot.v2 v2.5.0
 )
 
 require (
