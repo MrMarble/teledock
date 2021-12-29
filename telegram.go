@@ -37,7 +37,7 @@ func NewBot(token string) (*Telegram, error) {
 		return nil, err
 	}
 
-	log.Info().Str("module", "telegram").Int("id", bot.Me.ID).Str("name", bot.Me.FirstName).Str("username", bot.Me.Username).Msg("connected to telegram")
+	log.Info().Str("module", "telegram").Int64("id", bot.Me.ID).Str("name", bot.Me.FirstName).Str("username", bot.Me.Username).Msg("connected to telegram")
 
 	return &Telegram{bot: bot}, nil
 }
