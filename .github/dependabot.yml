@@ -1,6 +1,14 @@
 version: 2
 
 updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "08:00"
+      timezone: Europe/Madrid
   - package-ecosystem: gomod
     directory: /
     schedule:
