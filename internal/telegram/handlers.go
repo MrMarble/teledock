@@ -1,4 +1,4 @@
-package main
+package telegram
 
 import (
 	"fmt"
@@ -7,20 +7,10 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
-	"github.com/enescakir/emoji"
+	"github.com/mrmarble/teledock/internal/utils"
 
 	tb "gopkg.in/tucnak/telebot.v2"
 )
-
-var state = map[string]emoji.Emoji{
-	"running":    emoji.CheckMarkButton,
-	"created":    emoji.Egg,
-	"restarting": emoji.RecyclingSymbol,
-	"removing":   emoji.Wastebasket,
-	"paused":     emoji.PauseButton,
-	"exited":     emoji.NoEntry,
-	"dead":       emoji.Skull,
-}
 
 const FormatedStr = "<code>%v</code>"
 
@@ -38,7 +28,7 @@ func (t *Telegram) handleList(m *tb.Message) {
 	if !t.isSuperAdmin(m.Sender) {
 		return
 	}
-	resultMsg := parseList(types.ContainerListOptions{})
+	resultMsg := utils.FormatContainerList(t.dckr.List(types.ContainerListOptions{}))
 	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
 }
 
@@ -47,7 +37,7 @@ func (t *Telegram) handleListAll(m *tb.Message) {
 	if !t.isSuperAdmin(m.Sender) {
 		return
 	}
-	resultMsg := parseList(types.ContainerListOptions{All: true})
+	resultMsg := utils.FormatContainerList(t.dckr.List(types.ContainerListOptions{All: true}))
 	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
 }
 
@@ -55,7 +45,7 @@ func (t *Telegram) handleImageList(m *tb.Message) {
 	if !t.isSuperAdmin(m.Sender) {
 		return
 	}
-	resultMsg := parseImageList(types.ImageListOptions{})
+	resultMsg := utils.FormatImageList(t.dckr.ListImages(types.ImageListOptions{}))
 	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
 }
 
@@ -65,10 +55,10 @@ func (t *Telegram) handleStop(m *tb.Message) {
 	}
 
 	containerID := m.Payload
-	if containerID == "" || !docker.isValidID(containerID) {
+	if containerID == "" || !t.dckr.IsValidID(containerID) {
 		t.askForContainer(m, types.ContainerListOptions{}, "stop")
 	} else {
-		if err := docker.stop(containerID); err != nil {
+		if err := t.dckr.Stop(containerID); err != nil {
 			t.reply(m, err.Error())
 		} else {
 			t.reply(m, "Container stopped")
@@ -82,12 +72,12 @@ func (t *Telegram) handleStartContainer(m *tb.Message) {
 	}
 
 	containerID := m.Payload
-	if containerID == "" || !docker.isValidID(containerID) {
+	if containerID == "" || !t.dckr.IsValidID(containerID) {
 		filters := filters.NewArgs()
 		filters.Add("status", "exited")
 		t.askForContainer(m, types.ContainerListOptions{All: true, Filters: filters}, "start")
 	} else {
-		if err := docker.start(containerID); err != nil {
+		if err := t.dckr.Start(containerID); err != nil {
 			t.reply(m, err.Error())
 		} else {
 			t.reply(m, "Container started")
@@ -101,21 +91,21 @@ func (t *Telegram) handleInspect(m *tb.Message) {
 	}
 
 	containerID := m.Payload
-	if containerID == "" || !docker.isValidID(containerID) {
+	if containerID == "" || !t.dckr.IsValidID(containerID) {
 		t.askForContainer(m, types.ContainerListOptions{All: true}, "inspect")
 		return
 	}
-	container, err := docker.inspect(containerID)
+	container, err := t.dckr.Inspect(containerID)
 	if err != nil {
 		t.reply(m, err.Error())
 		return
 	}
 
-	response, err := formatStruct(container)
+	response, err := utils.FormatStruct(container)
 	if err != nil {
 		t.reply(m, err.Error())
 	}
-	for index, chunk := range chunkString(response, 3000) {
+	for index, chunk := range utils.ChunkString(response, 3000) {
 		if index == 0 {
 			t.reply(m, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
 		} else {
@@ -130,7 +120,7 @@ func (t *Telegram) handleStacks(m *tb.Message) {
 	if !t.isSuperAdmin(m.Sender) {
 		return
 	}
-	resultMsg := parseStacks()
+	resultMsg := utils.FormatComposeList(t.dckr.ListCompose())
 	t.send(m.Chat, strings.Join(resultMsg, "\n\n"))
 }
 
@@ -140,14 +130,14 @@ func (t *Telegram) handleLogs(m *tb.Message) {
 	}
 	payload := strings.Split(m.Payload, " ")
 	containerID := payload[0]
-	if containerID == "" || !docker.isValidID(containerID) {
+	if containerID == "" || !t.dckr.IsValidID(containerID) {
 		t.askForContainer(m, types.ContainerListOptions{All: true}, "logs")
 	} else {
 		tail := "10"
 		if len(payload) > 1 {
 			tail = payload[1]
 		}
-		logs, err := docker.logs(containerID, tail)
+		logs, err := t.dckr.Logs(containerID, tail)
 
 		if err != nil {
 			t.reply(m, err.Error())
@@ -164,6 +154,28 @@ func (t *Telegram) handleLogs(m *tb.Message) {
 	}
 }
 
+func (t *Telegram) inspectHandler(c *tb.Callback, payload string) {
+	container, err := t.dckr.Inspect(payload)
+	if err != nil {
+		t.callbackResponse(c, err, payload, "")
+		return
+	}
+
+	response, err := utils.FormatStruct(container)
+	if err != nil {
+		t.callbackResponse(c, err, payload, "")
+		return
+	}
+	for index, chunk := range utils.ChunkString(response, 3000) {
+		if index == 0 {
+			t.callbackResponse(c, err, payload, fmt.Sprintf(FormatedStr, chunk))
+		} else {
+			t.send(c.Message.Chat, fmt.Sprintf(FormatedStr, chunk), tb.ModeHTML)
+		}
+		time.Sleep(250 * time.Millisecond)
+	}
+}
+
 func (t *Telegram) handleCallback(c *tb.Callback) {
 	parts := strings.Split(c.Data, ":")
 	instruction := parts[0]
@@ -171,17 +183,17 @@ func (t *Telegram) handleCallback(c *tb.Callback) {
 
 	switch instruction {
 	case "stop":
-		err := docker.stop(payload)
-		callbackResponse(t, c, err, payload, fmt.Sprintf("Container %v stopped", payload))
+		err := t.dckr.Stop(payload)
+		t.callbackResponse(c, err, payload, fmt.Sprintf("Container %v stopped", payload))
 
 	case "start":
-		err := docker.start(payload)
-		callbackResponse(t, c, err, payload, fmt.Sprintf("Container %v started", payload))
+		err := t.dckr.Start(payload)
+		t.callbackResponse(c, err, payload, fmt.Sprintf("Container %v started", payload))
 
 	case "inspect":
-		handleInspect(t, c, payload)
+		t.inspectHandler(c, payload)
 
 	case "logs":
-		handleLog(t, c, payload)
+		t.handleLog(c, payload)
 	}
 }
