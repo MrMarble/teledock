@@ -134,7 +134,7 @@ func (t *Telegram) registerHandlers() {
 
 func (t *Telegram) isSuperAdmin(user *tb.User) bool {
 	for _, uid := range superAdmins {
-		if int64(user.ID) == uid {
+		if user.ID == uid {
 			return true
 		}
 	}
