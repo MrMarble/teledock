@@ -2,10 +2,12 @@ name: ci
 
 on:
   push:
+    workflow_dispatch:
     branches:
       - 'master'
     tags:
       - 'v*'
+    release:
 
 jobs:
   docker:
