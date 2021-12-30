@@ -16,6 +16,7 @@ RUN CGO_ENABLED=0 go build -installsuffix 'static' -o /teledock /src/cmd/teledoc
 ## Final container
 FROM scratch AS final
 
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /teledock /teledock
 
 ENTRYPOINT ["/teledock"]
