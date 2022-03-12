@@ -3,7 +3,7 @@ module github.com/mrmarble/teledock
 go 1.17
 
 require (
-	github.com/docker/docker v20.10.12+incompatible
+	github.com/docker/docker v20.10.13+incompatible
 	github.com/enescakir/emoji v1.0.0
 	github.com/rs/zerolog v1.26.1
 	gopkg.in/tucnak/telebot.v2 v2.5.0
